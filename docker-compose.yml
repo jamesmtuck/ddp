@@ -1,0 +1,6 @@
+version: '3'
+services:
+  ddp:
+    build: .
+    volumes:
+    - .:/ddp

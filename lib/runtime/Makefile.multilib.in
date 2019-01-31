@@ -1,0 +1,56 @@
+SOURCES = Database.cpp HashTable.cpp Instrument.cpp PerfectSet.cpp Signature.cpp Snapshots.cpp sqlite3.c
+OBJS = $(addsuffix .o,$(basename $(SOURCES)))
+OBJS32 = $(addsuffix .o32,$(basename $(SOURCES)))
+OBJSBC = $(addsuffix .bc,$(basename $(SOURCES)))
+OBJSBC32 = $(addsuffix .bc32,$(basename $(SOURCES)))
+
+CXXFLAGS = -O3 -I ./ 
+CFLAGS = -O3 -I ./ -DSQLITE_THREADSAFE=0 -DSQLITE_OMIT_LOAD_EXTENSION
+
+TARGETS = libDDPInstrument.a  libDDPInstrument32.a libDDPInstrument.bc libDDPInstrument32.bc
+
+all: $(TARGETS)
+
+install: $(TARGETS)
+	 cp libDDPInstrument.a @prefix@/lib/
+	 cp libDDPInstrument32.a @prefix@/lib/
+	 cp libDDPInstrument.bc @prefix@/lib/
+	 cp libDDPInstrument32.bc @prefix@/lib/
+
+libDDPInstrument.a: $(OBJS)
+	ar cru $@ $^	
+
+libDDPInstrument32.a: $(OBJS32)
+	ar cru $@ $^	
+
+libDDPInstrument.bc: $(OBJSBC)
+	llvm-link -o $@ $^
+
+libDDPInstrument32.bc: $(OBJSBC32)
+	llvm-link -o $@ $^
+	  
+
+%.o:%.cpp
+	g++ -c $(CXXFLAGS) -o $@ $<
+%.o:%.c
+	gcc -c $(CFLAGS) -o $@ $<
+
+%.o32:%.cpp
+	g++ -c -m32 $(CXXFLAGS) -o $@ $<
+%.o32:%.c
+	gcc -c -m32 $(CFLAGS) -o $@ $<
+
+%.bc:%.cpp
+	clang++ -emit-llvm -c $(CXXFLAGS) -D_GNU_SOURCE -o $@ $<
+%.bc:%.c
+	clang -emit-llvm -c $(CFLAGS) -D_GNU_SOURCE -o $@ $<
+
+
+%.bc32:%.cpp
+	clang++ -m32 -emit-llvm -c $(CXXFLAGS) -D_GNU_SOURCE -o $@ $<
+%.bc32:%.c
+	clang -m32 -emit-llvm -c $(CFLAGS) -D_GNU_SOURCE -o $@ $<
+	
+
+clean:
+	@rm -Rf $(OBJS) $(OBJS32) $(OBJSBC) $(OBJSBC32) $(TARGETS)

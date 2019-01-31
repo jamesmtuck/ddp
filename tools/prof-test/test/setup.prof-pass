@@ -1,0 +1,12 @@
+if [ -z $SCORPION_TOOL_PREFIX ]; then
+   echo Set SCORPION_TOOL_PREFIX and re-run this script.
+fi
+
+export SCORPION_TOOL_CFLAGS="-ProfPass -profile-db-prefix=`pwd` -origin=%inpath"
+export SCORPION_TOOL_LDFLAGS="-L$SCORPION_TOOL_PREFIX/lib -linstr_lib -lsqlite3"
+export SCORPION_TOOL_NAME=bin/prof-test
+
+# for command line output
+#export SCORPION_VERBOSE=1
+# for help
+#export SCORPION_VERBOSE=help
