@@ -1,5 +1,7 @@
 #ddp
 
+[![Build Status](https://travis-ci.com/jamesmtuck/ddp.svg?branch=master)](https://travis-ci.com/jamesmtuck/ddp)
+
 Simple setup with Docker
 --
 
