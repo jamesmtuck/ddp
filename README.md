@@ -17,3 +17,8 @@ Now you are inside the docker container with the git repo in a mounted volume.
 2. cmake -DLLVM_DIR=/usr/local/lib/cmake/llvm -DCMAKE_INSTALL_PREFIX=`pwd`/install ..
 3. cmake --build . 
 4. cmake --build . --target install
+
+
+Acknowledgement
+--
+This work was supported in part by a grant from the National Science Foundation and Qualcomm.
